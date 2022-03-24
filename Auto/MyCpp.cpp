@@ -9,6 +9,7 @@ class Cat
 	std::string name = "";
 	int age = 0;
 public:
+	int n = 0;
 	Cat(std::string s, int n) { name = 5; age = n; }
 };
 
@@ -96,5 +97,10 @@ int main()
 	// 복사 생성자의 경우 1기가 + 2기가의 임시 객체를 저장할 3기가와
 	// 그것을 저장할 변수의 3기가, 도합 6기가가 필요하다
 	// 하지만 1기가 + 2기가 = 3기가에 바로 변수명을 붙이면 비용을 훨씬 줄일 수 있다
+
+	auto test = [](int* a)->int& {return *a; };
+
+	auto func = [](auto x, auto y) {return x + y; };
+	std::cout << func(11., 5) << " " << func(3.7, 23.1) << std::endl;
 
 }
