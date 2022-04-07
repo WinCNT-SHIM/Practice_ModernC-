@@ -57,7 +57,8 @@ void fooCase2(T& param)
 ///   param의 Type이 보편 참조(Universal Reference)일 경우
 ///   보편 참조가 관여하면 L-Value 인수와 R-Value 인수에 대해서 서로 다른 추론 규칙들이 적용된다
 ///   만일 expr이 L-Value면, 정상적인(즉 Case2의) 규칙이 적용
-///   만일 expr이 R-Value면, T와 param의 Type 둘 다 R-Value 참조로 추론
+///   만일 expr이 R-Value면, T는 &&를 무시하고, param의 Type를 R-Value 참조로 추론
+///   (T는 &&를 무시하는 이유는 param의 Type에 &&를 붙이기 위해서)
 ///   보편 참조가 아닌 매개변수들에 대해서는 그러한 일이 절대 발생하지 않는다
 /// </summary>
 template<typename T>
@@ -102,9 +103,18 @@ int main()
 
 	// ==================== Case4 ====================
 	// "abc" 자체가 const char*(정확히는 char[])
-	const char* const ptr = "abc";		// prt는 const 객체를 가리키는 const 포인터
-	fooCase4(ptr);						// const char* const 타입의 인수로 전달
+	const char* const ptr = "abc";	// prt는 const 객체를 가리키는 const 포인터
+	fooCase4(ptr);					// const char* const 타입의 인수로 전달
 
+	const char name[] = "abc";		// name은 배열
+	fooCase4(name);					// T와 param의 Type 모두 const char*
+
+	int arr[3] = { 1, 2, 3 };
+	int* ptr1 = arr;
+	int(*ptr2)[3] = &arr;
+
+	cout << ptr1 << ", " << ptr1 + 1 << endl;
+	cout << ptr1 << ", " << ptr2 + 1 << endl;
 
 	return 0;
 }

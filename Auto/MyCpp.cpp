@@ -1,5 +1,11 @@
 #include <iostream>
 #include <vector>
+/// <summary>
+/// auto를 쓰면 좋은 이유
+///   1. auto는 반드시 초기화를 해야 한다
+///   2. 타입 단축(Type Shortcut)의 문제를 회피할 수 있다
+///   3. 타이핑을 줄일 수 있다
+/// </summary>
 
 int add(int x, int y) { return x + y; }
 auto addRetAuto(int x, int y) { return x + y; } // C++ 18 즈음에 가능해짐
@@ -102,5 +108,4 @@ int main()
 
 	auto func = [](auto x, auto y) {return x + y; };
 	std::cout << func(11., 5) << " " << func(3.7, 23.1) << std::endl;
-
 }
