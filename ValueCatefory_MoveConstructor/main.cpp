@@ -53,23 +53,26 @@ public:
 			cout << "복사 대입 연산자" << endl;
 		}
 	}
+};
 
+class B
+{
+public:
+	//B(A a) { }
+	B(const A& a) : m_a(a) {}
+	B(A&& a) : m_a(move(a)) { }
+	A m_a;
 };
 
 int main()
 {
 	A a;
-	A b(a);
-	A c(move(a));
+	A a2(a);
+	A a3(move(a));
 
+	cout << "Create B\n";
 
-	// ==================== 객체 ====================
-	cout << "객체" << endl;
-
-
-
-
-	// ==================== 함수 ====================
-	cout << "함수" << endl;
-
+	B b1((a));
+	B b2(a);
+	//B b3(move(a));
 }
