@@ -23,7 +23,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TemporaryObject", "Temporar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CopyElision", "CopyElision\CopyElision.vcxproj", "{0E384A79-A32E-4DE4-99A3-418DC03C719D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniformInit", "UniformInit\UniformInit.vcxproj", "{DD23C0FF-46DC-4B98-A5ED-0A9BCB475139}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Uniform_Init", "UniformInit\UniformInit.vcxproj", "{DD23C0FF-46DC-4B98-A5ED-0A9BCB475139}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NULL_Nullptr", "NULL_Nullptr\NULL_Nullptr.vcxproj", "{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,14 @@ Global
 		{DD23C0FF-46DC-4B98-A5ED-0A9BCB475139}.Release|x64.Build.0 = Release|x64
 		{DD23C0FF-46DC-4B98-A5ED-0A9BCB475139}.Release|x86.ActiveCfg = Release|Win32
 		{DD23C0FF-46DC-4B98-A5ED-0A9BCB475139}.Release|x86.Build.0 = Release|Win32
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Debug|x64.ActiveCfg = Debug|x64
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Debug|x64.Build.0 = Debug|x64
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Debug|x86.ActiveCfg = Debug|Win32
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Debug|x86.Build.0 = Debug|Win32
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Release|x64.ActiveCfg = Release|x64
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Release|x64.Build.0 = Release|x64
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Release|x86.ActiveCfg = Release|Win32
+		{E75A3959-2F70-4B3D-BDF9-123A97DB22FA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

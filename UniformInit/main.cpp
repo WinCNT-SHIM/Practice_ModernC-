@@ -18,6 +18,9 @@ using namespace std;
 
 /// <summary>
 /// 초기화자 리스트(Initiaslizer List)
+///   예) A a_IL = { 1, 2, 3, 4, 5 };
+///
+///   auto와 템플릿에 사용할 때에는 주의하자!
 /// </summary>
 class A
 {
@@ -48,13 +51,27 @@ public:
 template<typename T>
 void foo(std::initializer_list<T> param) {}
 
-
 auto CreateInitList(void)
 {
 	//return { 1, 2, 3 };		// 오류! { 1, 2, 3 }의 타입을 추론할 수 없음!
 	auto a = { 1, 2, 3 };
 	return a;
 }
+
+struct T
+{
+	int i;
+	string v;
+	bool b;
+};
+
+class Widget
+{
+public:
+	Widget(int i) {}
+	Widget(double d) {}
+	//Widget(std::initializer_list<double> il) {}
+};
 
 int main()
 {
@@ -116,4 +133,19 @@ int main()
 	// std::initializer_list<T>와 같이 명시적으로 작성해야 한다
 	// 예시) void foo(std::initializer_list<T> param);
 	foo({ "a"s, "b"s });
+
+
+	// ==================== 초기화자 리스트의 주의점 ====================
+	// vector의 경우 다음의 초기화가 다르다!
+	vector<int> v_tmp1(10, 20);		// 요소: 10개, 모두 20
+	vector<int> v_tmp1{ 10, 20 };	// 요소: 2개, 10과 20
+
+
+	// 생성자의 패러미터로 초기화자 리스트가 있는 경우
+	// 초기화자 리스트를 우선으로 확인하고,
+	// 초기화자 리스트가 감당할 수 있는 타입이면 해당 생성자가 호출되며
+	// 아닐 경우는 다른 생성자를 찾는다
+	T t{ 1, "acb", true };
+
+
 }
