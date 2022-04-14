@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5e9a63b4-d145-44ae-9254-53bb0230cb3f}</ProjectGuid>
-    <RootNamespace>RangeBasedFor</RootNamespace>
+    <ProjectGuid>{d0d193fe-92c7-46cd-a6ce-6a006c19fc48}</ProjectGuid>
+    <RootNamespace>SmartPointer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>20220317_RangeBasedFor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
