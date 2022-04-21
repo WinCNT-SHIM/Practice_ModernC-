@@ -48,5 +48,9 @@ int main()
 	remove_const<int>::type;
 	std::remove_const_t<int>; // using remove_const_t = typename remove_const<int>::type;
 
+	int arrX[3] = { 1, 2, 3 };
+	int* arrPtr1 = arrX;
+	int(*arrPtr2)[3] = &arrX;
+
 	return 0;
 }

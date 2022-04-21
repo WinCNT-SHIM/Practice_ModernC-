@@ -18,10 +18,12 @@ using namespace std;
 ///   unique_ptr<> : 배타적 소유권
 ///   shared_ptr<> : 공유 자원 관리
 ///   weak_ptr<>   : shared_ptr를 보완하기 위해 사용
+///   (과거에는 auto_ptr이란 것도 존재했음)
 /// 
 /// C++에서 자원을 관리하는 방법
 /// RAII(Resource Acquisition Is Initialize) 패턴
 ///   자원의 획득은 초기화이다
+///   획득한 동시에 해제에 대해서도 확실하게 설정하기
 ///   스택에 할당된 메모리는 자동으로 해제되는 것을 이용한 디자인 패턴
 /// 
 /// </summary>
@@ -43,11 +45,13 @@ public:
 	char* c = nullptr;
 	MyString(size_t len)
 	{
+		// RAII - 자원의 획득은 초기화이다
 		cout << "MyString 자원 획득함!\n";
 		c = new char[len];
 	}
 	~MyString()
 	{
+		// RAII - 해제 시에는 자원의 해제도 확실하게!
 		cout << "MyString 자원 delete!\n";
 		delete[] c;
 	}
@@ -62,8 +66,8 @@ public:
 	MyString_SPtr(MyString* d):data(d) { }
 	~MyString_SPtr() { delete data; }
 
-	MyString& operator*() const { return *data; }
-	MyString* operator->() const { return data; }
+	MyString& operator*() const { return *data; }	// *
+	MyString* operator->() const { return data; }	// ->
 };
 
 int main()
@@ -83,22 +87,26 @@ int main()
 	}
 	cout << "중괄호 end\n";
 
+	// ==================== 스마트 포인터 구현 예제 ====================
 	// RAII 패턴 예제
 	cout << "\n일반 MyString\n";
 	{
-		MyString a(100);
-		strcpy_s(a.c, 14, "Hello, World!");
+		MyString* a = new MyString(100);
+		strcpy_s(a->c, 14, "Hello, World!");
+		//MyString a(100);
+		//strcpy_s(a.c, 14, "Hello, World!");
 	}
 	cout << "\n";
 
 	cout << "\nMyString_SPtr\n";
 	{
-		MyString_SPtr sp = new MyString(100);
+		MyString_SPtr sp = new MyString(100);	//MyString* sp = new MyString(100);
 		strcpy_s(sp->c, 14, "Hello, World!");
 		sp->func();
 	}
 	cout << "\n";
 
+	// ==================== unique_ptr 예제 ====================
 	cout << "unique_ptr with unique_ptr\n";
 	{
 		unique_ptr<MyString> pa(new MyString(100));
