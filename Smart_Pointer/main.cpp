@@ -99,7 +99,7 @@ int main()
 	}
 	cout << "\n";
 
-	cout << "\unique_ptr with unique_ptr\n";
+	cout << "unique_ptr with unique_ptr\n";
 	{
 		unique_ptr<MyString> pa(new MyString(100));
 		strcpy_s(pa->c, 14, "Hello, World!");
@@ -107,7 +107,7 @@ int main()
 	}
 	cout << "\n";
 
-	cout << "\unique_ptr with unique_ptr\n";
+	cout << "unique_ptr with unique_ptr\n";
 	{
 		unique_ptr<MyString> pa2 = make_unique<MyString>(100);
 		strcpy_s(pa2->c, 14, "Hello, World!");
