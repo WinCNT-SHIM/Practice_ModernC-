@@ -139,6 +139,75 @@ struct foo5
 
 };
 
+/// <summary>
+/// move_if_noexcpet
+/// 이동, 혹은 복사될 수 있는 X를 인자로 받아
+/// 이동 생성자가 noexcpet인 경우에는 이동 생성자를 반환하고
+/// 이동 생성자가 noexcpet가 아닌 경우에는 복사 생성자를 반환한다
+/// </summary>
+struct Good
+{
+	Good() {}
+	Good(Good&&) noexcept
+	{
+		cout << "Non-Throing move constructor called" << endl;
+	}
+	Good(const Good&)
+	{
+		cout << "Non-Throing copy constructor called" << endl;
+	}
+};
+
+struct Bad
+{
+	Bad() {}
+	Bad(Bad&&)
+	{
+		cout << "Throing move constructor called" << endl;
+	}
+	Bad(const Bad&)
+	{
+		cout << "Throing copy constructor called" << endl;
+	}
+};
+
+/// <summary>
+/// 다음 함수들은 기본적으로 noexcept를 가진다
+///   암시적으로 생성되는 기본 생성자, 복사 생성자, 대입 연산자, 이동 생성자, 이동 연산자, 소멸자
+///   유저가 명시적으로 noexcept(false)로 선언하거나, 부모의 소멸자가 그러하지 않은 경우를 제외한
+///   모든 유저 정의 소멸자 operator delete 함수들(할당 해제 함수들)
+/// 
+/// 이 중 암시적으로 생성되는 복사/이동 생서자나 대입/이동 연산자
+/// 
+/// 이들의 생성자나 연산자가 기본적으로 noexcept를 가질 수 있다
+/// </summary>
+void may_throw();					//
+void no_throw() noexcept;			//
+
+auto lmay_throw = [] {};			// 람다
+auto lno_throw = []() noexcept {};	//
+
+class T_class
+{
+public:
+	// 명시적인 소멸자 선언으로 인해 이동 생성자, 이동 연산자의 암시적 생성 금지
+	// 하지만 복사 생성자, 대입 연산자는 noexcept로 암시적으로 생성된다
+	~T_class() {};
+};
+
+class U_class
+{
+	vector<int> v;
+public:
+	~U_class() {};
+};
+
+class V_class
+{
+	vector<int> v;
+};
+
+
 int main()
 {
 	// noexcept 연산자
@@ -151,11 +220,29 @@ int main()
 	// noexcept(noexcept(T))가 noexcept(true)로 된다
 	foo<int>();
 
+	// strong exception guarantee
 	vector<foo5> foo5s;
 	foo5s.emplace_back(1);
 	
 	// 이때, 벡터의 (사이즈)확장을 위해 reserve가 발생
 	// 만약 foo5의 이동 생성자가 noexcept를 보장하지 않으면, 복사 생성자가 발생한다
 	// 즉, reallocating 과정에서 이동이 아닌 복사가 발생하여 성능 이득을 얻지 못하게 된다
+	// (여기서는 noexcept를 보장했기 때문에 reallocating 과정에서 전에 추가한 1이란 요소가 이동 생성자로 이동된다)
 	foo5s.emplace_back(2);
+
+	Good g;
+	Bad b;
+	// Good 이동 생성자는 예외를 던지지 않으므로, std::move(g)를 반환 --> 이동 생성자가 실행된다
+	Good g2 = std::move_if_noexcept(g);
+	// Bad 이동 생성자는 예외를 던질 수 있으므로 b를 반환 --> 복사 생성자가 실행된다
+	Bad b2 = std::move_if_noexcept(b);
+
+	// 기본적으로 noexcept 가지는 경우
+	T_class t;
+	U_class u;
+	V_class v;
+
+	cout << noexcept(std::declval<T_class>().~T_class()) << endl;	//
+	cout << noexcept(T_class(std::declval<T_class>())) << endl;		//
+	cout << noexcept(T_class(t)) << endl;							//
 }
