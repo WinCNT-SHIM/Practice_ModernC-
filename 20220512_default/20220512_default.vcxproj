@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{031e41ac-7eff-4fc1-9f0e-9e8fdc20e751}</ProjectGuid>
-    <RootNamespace>My20220428const</RootNamespace>
+    <ProjectGuid>{b1e32d50-56f8-4ef8-861f-cf91e8dba356}</ProjectGuid>
+    <RootNamespace>My20220512default</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,8 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="20220512_DeleteFunction.cpp" />
-    <ClCompile Include="const.cpp" />
+    <ClCompile Include="20220512_default.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
