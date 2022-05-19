@@ -5,6 +5,7 @@
 #include <string>
 #include <type_traits>
 #include <map>
+#include <algorithm> //for_each
 
 #include <functional>
 
@@ -124,6 +125,11 @@ function<void()> FunctionReturn();
 template<typename TFunc>
 void TemplateFunc(TFunc func);
 
+auto multipleVal(int x)
+{
+	return [x] {return 2 * x; };
+}
+
 int main()
 {
 	int a = 0;	// 데이터
@@ -218,10 +224,10 @@ int main()
 
 
 	vector<int> v = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	//for_each(begin(v), end(v), [&](const int& i) {cout <<  i; }); cout << endl;
-	//for_each(begin(v), end(v), [&](const int& i) { if(i % 2 == 0) cout << i; }); cout << endl;
-	//for_each(begin(v), end(v), [&](int& i) {cout << i; });
-	//for_each(v.begin(), v.end(), [&](auto n) { cout << n; });
+	for_each(begin(v), end(v), [&](const int& i) { cout << i; }); cout << endl;
+	for_each(begin(v), end(v), [&](const int& i) { if(i % 2 == 0) cout << i; }); cout << endl;
+	for_each(begin(v), end(v), [&](int& i) { cout << i; }); cout << endl;
+	for_each(v.begin(), v.end(), [&](auto n) { cout << n; }); cout << endl;
 
 	// 함수를 보관(...)하는 벡터 예제
 	vector< function<const char* ()> > v_func;
@@ -238,7 +244,67 @@ int main()
 	TemplateFunc(funcTemplate);
 
 	// sort
+	vector<int> v_int;
+	for (int i = 0; i < 1000000; ++i) { v_int.push_back(rand() % 2000); }
+	sort(v_int.begin(), v_int.end(), [](int& a, int& b)-> bool {return a > b; });
+	cout << endl;
+
+	// ========== 람다식의 지연 실행 ==========
+	cout << "========== 람다식의 지연 실행 ==========" << endl;
+	int ex_val = 5;
+
+	auto _LambdaFunc = [ex_val]() mutable { ex_val *= 5; return ex_val; };
+	cout << "val: " << ex_val << endl; // 5, 람다식을 실행하지 않았기 때문
+
+	ex_val = 10;
+	cout << "val * 5: " << _LambdaFunc() << endl; // 25
+	// 캡처한 상태에서의 람다식이 실행(지연 실행)되었기 때문(50 아님!)
+	//auto closureFunc = [a, b](int x) {cout << a * x + b << endl; };
+
+	// ========== 람다식 정리 ==========
+	// 6.캡처 블럭은 디폴트가 Const인데 이를 무시하고 값을 변경하고자 할 때
+	// mutable 키워드
+
+	// 7. 캡처 블럭 사용(레퍼런스)
+	int value4 = 40;
+	auto lambda7 = [&value4] { value4 += 10; cout << "07: " << value4 << endl; };
+	//lambda7();	// 실행되어야 변경됨
+	cout << "07: " << value4 << endl;
+	// 람다의 특성 상, 레퍼런스가 사라지지 않도록 주의!!!해야 한다
+
+
+	// 8. 제네릭 람다 형식(C==14, 파라미터 i를 auto로 가능)
+	int value5 = 50;
+	auto lambda8 = [](auto i) { return i > 100; };
+	cout << "08: " << lambda8(value5) << endl;
+
+	auto Add8 = [](auto a, auto b) { return a + b; };
+
+
+	// 9-1. 캡처 블럭 값 초기화(Init Capture) C++14
+	int value6 = 60;
+	auto lambda9 = [myVal = "My Value: ", value6] { 
+		cout << "9 : " << myVal << ", Value : " << myVal << endl;
+	};
+	lambda9();
+	// 보통은 외부 변수와의 관계성을 끊기 위해 사용
+	auto lambda9_1 = [myVal = value6]{
+		cout << "9-1 : " << myVal << ", Value : " << myVal << endl;
+	};
+	lambda9_1();
+
+	// 9-2. unique_ptr은 value로는 기본적으로 복사가 되지 않지만...move로는 가능
+	auto valuePrt = make_unique<int>(70);
+	auto lambda9_2 = [p = move(valuePrt)]{ cout << "9-2 : " << *p << endl; };
+	lambda9_2();
 	
+
+	//10. 리턴 타입으로써의 람다 형식 --> 람사를 함수 객체처럼 사용 가능
+	function<int(void)> fn10 = ::multipleVal(10);
+	cout << "10: fn10() : " << fn10() << endl;
+	auto fn10_2 = ::multipleVal(20);
+	cout << "10 : fn10_2() : " << fn10_2() << endl;
+
 
 	return 0;
 }
