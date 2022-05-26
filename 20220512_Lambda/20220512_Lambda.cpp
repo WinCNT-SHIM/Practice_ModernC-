@@ -125,6 +125,46 @@ function<void()> FunctionReturn();
 template<typename TFunc>
 void TemplateFunc(TFunc func);
 
+
+class PrimeNumber
+{
+public:
+	PrimeNumber()
+	{
+		m_primeList.push_back(1);
+		m_primeList.push_back(2);
+		m_primeList.push_back(5);
+		m_primeList.push_back(7);
+		m_primeList.push_back(11);
+	}
+
+	void PrintPrimeNumbers() const
+	{
+		// this 캡처, private 멤버에 접근하기 위해서는 필요하다
+		// C++에서는 람다도 일종의 클래스이며, 클래스 안에서의 람다는 friend와 비슷하다
+		// 따라서 private 멤버 함수에 접근하기 위해서는 this 캡처가 필요하다
+		for_each(m_primeList.begin(), m_primeList.end(),
+			[this](int primeNumber) { _Print(primeNumber); }
+		);
+	}
+
+private:
+	typedef vector<int> PrimeNumberList;
+	PrimeNumberList m_primeList;
+	void _Print(int primeNumber) const
+	{
+		cout << "The prime number : " << primeNumber << endl;
+	}
+};
+
+struct S
+{
+	void operator() (int a, int b)
+	{
+		cout << "a + b = " << a + b << endl;
+	}
+};
+
 auto multipleVal(int x)
 {
 	return [x] {return 2 * x; };
@@ -264,6 +304,10 @@ int main()
 	// ========== 람다식 정리 ==========
 	// 6.캡처 블럭은 디폴트가 Const인데 이를 무시하고 값을 변경하고자 할 때
 	// mutable 키워드
+	int value3 = 30;
+	auto lambda6 = [value3]() mutable { value3 += 10; cout << "06: " << value3 << endl; };
+	lambda6();
+	cout << "06 : value3 " << value3 << endl;
 
 	// 7. 캡처 블럭 사용(레퍼런스)
 	int value4 = 40;
@@ -279,15 +323,19 @@ int main()
 	cout << "08: " << lambda8(value5) << endl;
 
 	auto Add8 = [](auto a, auto b) { return a + b; };
+	int iRes = Add8(2, 4);
+	float fRes = Add8(2.f, 4.f);
 
 
 	// 9-1. 캡처 블럭 값 초기화(Init Capture) C++14
+	// 일반화된 람다 캡쳐(generalized lambda capture)라고도 한다
 	int value6 = 60;
 	auto lambda9 = [myVal = "My Value: ", value6] { 
 		cout << "9 : " << myVal << ", Value : " << myVal << endl;
 	};
 	lambda9();
 	// 보통은 외부 변수와의 관계성을 끊기 위해 사용
+	// (명시적으로도 표시된다는 장점이 있음)
 	auto lambda9_1 = [myVal = value6]{
 		cout << "9-1 : " << myVal << ", Value : " << myVal << endl;
 	};
@@ -301,10 +349,34 @@ int main()
 
 	//10. 리턴 타입으로써의 람다 형식 --> 람사를 함수 객체처럼 사용 가능
 	function<int(void)> fn10 = ::multipleVal(10);
-	cout << "10: fn10() : " << fn10() << endl;
+	cout << "10 : fn10()   : " << fn10() << endl;
 	auto fn10_2 = ::multipleVal(20);
 	cout << "10 : fn10_2() : " << fn10_2() << endl;
 
+
+	// 재귀 람다
+	function<int(int)> Factorial = [&Factorial](int num) -> int
+	{
+		return num <= 1 ? 1 : num * Factorial(num - 1);
+	};
+	cout << "Factorial(5) : " << Factorial(5) << endl;
+
+	// 클래스 내부의 람다 함수
+	PrimeNumber pn;
+	pn.PrintPrimeNumbers();
+
+
+	// 
+	
+	// 호출(함수 객체)
+	// 미리 만들어 둘 수 있는 것은 함수 객체로 만들어둠
+	S some_obj;
+	some_obj(3, 5);
+
+	// 호출(람다)
+	// 그 때 그 때 필요할 때 만들어서 사용함
+	auto fLambda = [](int a, int b) {cout << "a + b = " << a + b << endl; };
+	fLambda(3, 5);
 
 	return 0;
 }
